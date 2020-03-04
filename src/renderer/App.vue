@@ -14,7 +14,6 @@
 import HeaderVue from './components/Header'
 import MainPage from './components/MainPage'
 import Tab from './components/Tab'
-console.log('dasdasd')
 export default {
   name: 'sfapp',
   components: {

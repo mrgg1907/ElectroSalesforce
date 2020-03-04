@@ -1,6 +1,7 @@
 'use strict'
 
 import { app, BrowserWindow } from 'electron'
+import store from '../renderer/store'
 
 /**
  * Set `__static` path to static files in production
@@ -23,12 +24,17 @@ function createWindow () {
     height: 563,
     useContentSize: true,
     width: 1000,
-    resizable: false
+    resizable: false,
+    webPreferences: {
+      nodeIntegration: true
+    }
   })
 
   mainWindow.loadURL(winURL)
   mainWindow.setMenu(null)
   mainWindow.on('closed', () => {
+    store.dispatch('setTokenAction', '')
+    store.dispatch('setInstanceAction', '')
     mainWindow = null
   })
 }

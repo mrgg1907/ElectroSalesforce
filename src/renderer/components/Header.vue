@@ -6,7 +6,7 @@
               <div class="slds-media__figure">
                 <span class="slds-icon_container slds-icon-standard-opportunity" title="opportunity">
                   <svg class="slds-icon slds-page-header__icon" aria-hidden="true">
-                    <use :xlink:href="'/assets/icons/standard-sprite/svg/symbols.svg#'+icon"></use>
+                    <use :xlink:href="$store.state.iconUrl+'/assets/icons/standard-sprite/svg/symbols.svg#'+icon"></use>
                   </svg>
 
                 </span>

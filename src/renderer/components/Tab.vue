@@ -41,7 +41,6 @@ export default {
   },
   methods: {
     clearTabs () {
-      console.log('abc')
       this.tabs.forEach(tab => {
         tab.active = false
       })

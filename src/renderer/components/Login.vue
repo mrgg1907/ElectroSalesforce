@@ -1,8 +1,5 @@
 <template>
 <div>
-  <div v-show="isModalActive">
-    <modal-app :messageType="messageType" :message="message" @closeModal="isModalActive=false"/>
-  </div>
 
   <div class="slds-grid slds-grid_vertical padDiv">
     <div class="slds-form-element slds-col padDiv1" >
@@ -27,53 +24,50 @@
 <script>
 import { EventBus } from '../event-bus'
 import AppModal from './AppModal'
+import { mapState } from 'vuex'
+import store from '../store'
 export default {
   components: {
     'modal-app': AppModal
   },
   data () {
     return {
-      isModalActive: false,
-      messageType: '',
-      message: ''
+      isModalActive: false
     }
   },
+  computed: {
+    ...mapState(['credentials'])
+  },
+  store,
   methods: {
     login () {
       EventBus.$emit('activatedSpinner')
       let jsforce = require('jsforce')
       let conn = new jsforce.Connection({
-        clientId: this.clientId,
-        clientSecret: this.clientSecret,
+        clientId: this.credentials.clientId,
+        clientSecret: this.credentials.clientSecret,
         loginUrl: this.credentials.isProdOrg ? 'https://login.salesforce.com' : 'https://test.salesforce.com',
         redirectUri: 'http://localhost'
       })
+
       conn.login(this.credentials.username, this.credentials.password + this.credentials.securityToken, (err, userInfo) => {
         EventBus.$emit('deActivatedSpinner')
-        console.log(this)
-        this.isModalActive = true
+        let alertMessage = {
+          message: '',
+          messageType: ''
+        }
         if (err) {
-          this.message = err
-          this.messageType = 'ERROR'
+          alertMessage.message = err
+          alertMessage.messageType = 'error'
           return console.error(err)
         }
-        // Now you can get the access token and instance URL information.
-        // Save them to establish connection next time.
-        this.connection = conn
-        console.log(this.connection)
-        this.messageType = 'SUCCESS'
-        this.message = 'Login Successful'
-        console.log(conn.accessToken)
-        console.log(conn.instanceUrl)
-        // logged in user property
-        console.log('User ID: ' + userInfo.id)
-        console.log('Org ID: ' + userInfo.organizationId)
-        // ...
+        alertMessage.message = 'Login Success'
+        alertMessage.messageType = 'success'
+        EventBus.$emit('activateModal', alertMessage)
+        store.dispatch('setTokenAction', conn.accessToken)
+        store.dispatch('setInstanceAction', conn.instanceUrl)
       })
     }
-  },
-  created () {
-    console.log('login oluştu')
   }
 
 }

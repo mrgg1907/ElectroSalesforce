@@ -55,6 +55,7 @@
   "dependencies": {
     "@salesforce-ux/design-system": "^2.11.4",
     "axios": "^0.18.0",
+    "clone": "^2.1.2",
     "jsforce": "^1.9.3",
     "vue": "^2.5.16",
     "vue-electron": "^1.0.6",
